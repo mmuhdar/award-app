@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Container, VStack } from '@chakra-ui/react';
 
-export default function Layout({ children }) {
+export default function Layout({ children }: any) {
   return (
     <VStack bg="whitesmoke">
       <Container

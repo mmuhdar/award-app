@@ -3,7 +3,6 @@ import { Flex, Text } from '@chakra-ui/react';
 import { IoFilterSharp, HiMenuAlt2 } from 'react-icons/all';
 
 export default function Home() {
-  // test deploy dev
   return (
     <>
       <Head>
