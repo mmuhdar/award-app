@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { Flex, Text } from '@chakra-ui/react';
-import { IoFilterSharp, HiMenuAlt2 } from 'react-icons/all';
+import { HiMenuAlt2 } from 'react-icons/hi';
+import { IoFilterSharp } from 'react-icons/io5';
 
 export default function Home() {
   return (
