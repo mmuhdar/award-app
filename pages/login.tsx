@@ -25,7 +25,7 @@ export default function Login() {
           pl={10}
           pr={10}
           mt={5}
-          rounded="none"
+          rounded="sm"
           bg="gray.700"
           color="white"
           _hover={{ bg: 'gray.500' }}

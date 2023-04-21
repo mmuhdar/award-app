@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import Layout from '@/components/layout';
-import { Box } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
+import { IoFilterSharp, HiMenuAlt2 } from 'react-icons/all';
 
 export default function Home() {
   return (
@@ -11,7 +11,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box height="100vh">Muhammad Muhdar</Box>
+      <Flex justifyContent="space-between" alignItems="center" p={5}>
+        <HiMenuAlt2 size="20px" />
+        <Text fontSize="lg" fontWeight="bold">
+          Awards
+        </Text>
+        <IoFilterSharp size="20px" />
+      </Flex>
     </>
   );
 }
