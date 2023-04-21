@@ -10,7 +10,6 @@ export default function Layout({ children }: any) {
         height="100vh"
         rounded="xl"
         boxShadow="lg"
-        margin={5}
       >
         <main>{children}</main>
       </Container>
