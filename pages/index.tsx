@@ -1,9 +1,11 @@
 import Head from 'next/head';
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { HiMenuAlt2 } from 'react-icons/hi';
 import { IoFilterSharp } from 'react-icons/io5';
+import Sidebar from '@/components/sidebar';
 
 export default function Home() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Head>
@@ -13,12 +15,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex justifyContent="space-between" alignItems="center" p={5}>
-        <HiMenuAlt2 size="20px" />
+        <HiMenuAlt2 size="20px" onClick={onOpen} cursor="pointer" />
         <Text fontSize="lg" fontWeight="bold">
           Awards
         </Text>
         <IoFilterSharp size="20px" />
       </Flex>
+      <Sidebar isOpen={isOpen} onClose={onClose} />
     </>
   );
 }
