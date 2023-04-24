@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -28,8 +28,19 @@ interface ISidebar {
 }
 
 export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
+  const [slideMin, setSlideMin] = useState(0);
+  const [slideMax, setSlideMax] = useState(0);
   const router = useRouter();
   const { pathname } = router;
+
+  function sliderHandler(value: any[]): void {
+    setSlideMin(value[0] * 10000);
+    setSlideMax(value[1] * 10000);
+  }
+
+  function convertNumber(value: number) {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
 
   return statusButton == 'menu' ? (
     <Drawer isOpen={isOpen} onClose={onClose} placement="left">
@@ -92,17 +103,30 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
         <DrawerBody>
           <Box>ini filter</Box>
           <Box>
-            <Stack direction="column" spacing={3} width="md">
+            <Stack direction="column" spacing={3}>
               <Text fontSize="sm" fontWeight="semibold">
                 Poin Needed
               </Text>
-              <RangeSlider aria-label={['min', 'max']} defaultValue={[1, 20]}>
-                <RangeSliderTrack>
-                  <RangeSliderFilledTrack />
-                </RangeSliderTrack>
-                <RangeSliderThumb index={0} />
-                <RangeSliderThumb index={1} />
-              </RangeSlider>
+              <Flex flexDir="column">
+                <Flex justifyContent="space-between">
+                  <Text fontSize="md" color="blue.500">
+                    IDR {convertNumber(slideMin)}
+                  </Text>
+                  <Text fontSize="md" color="blue.500">
+                    IDR {convertNumber(slideMax)}
+                  </Text>
+                </Flex>
+                <RangeSlider
+                  defaultValue={[slideMin / 10000, slideMax / 10000]}
+                  onChange={(e) => sliderHandler(e)}
+                >
+                  <RangeSliderTrack>
+                    <RangeSliderFilledTrack />
+                  </RangeSliderTrack>
+                  <RangeSliderThumb index={0} />
+                  <RangeSliderThumb index={1} />
+                </RangeSlider>
+              </Flex>
             </Stack>
             <Stack direction="column" spacing={3} mt={5}>
               <Text fontSize="sm" fontWeight="semibold">
