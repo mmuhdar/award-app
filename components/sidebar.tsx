@@ -101,62 +101,62 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
         <DrawerCloseButton />
         <DrawerHeader>Filter</DrawerHeader>
         <DrawerBody>
-          <Box>ini filter</Box>
-          <Box>
-            <Stack direction="column" spacing={3}>
-              <Text fontSize="sm" fontWeight="semibold">
-                Poin Needed
-              </Text>
-              <Flex flexDir="column">
-                <Flex justifyContent="space-between">
-                  <Text fontSize="md" color="blue.500">
-                    IDR {convertNumber(slideMin)}
-                  </Text>
-                  <Text fontSize="md" color="blue.500">
-                    IDR {convertNumber(slideMax)}
-                  </Text>
+          <Flex flexDir="column" justifyContent="space-between">
+            <Box>ini filter</Box>
+            <Box>
+              <Stack direction="column" spacing={3}>
+                <Text fontSize="sm" fontWeight="semibold">
+                  Poin Needed
+                </Text>
+                <Flex flexDir="column">
+                  <Flex justifyContent="space-between">
+                    <Text fontSize="md" color="blue.500">
+                      IDR {convertNumber(slideMin)}
+                    </Text>
+                    <Text fontSize="md" color="blue.500">
+                      IDR {convertNumber(slideMax)}
+                    </Text>
+                  </Flex>
+                  <RangeSlider
+                    defaultValue={[slideMin / 10000, slideMax / 10000]}
+                    onChange={(e) => sliderHandler(e)}
+                  >
+                    <RangeSliderTrack>
+                      <RangeSliderFilledTrack />
+                    </RangeSliderTrack>
+                    <RangeSliderThumb index={0} />
+                    <RangeSliderThumb index={1} />
+                  </RangeSlider>
                 </Flex>
-                <RangeSlider
-                  defaultValue={[slideMin / 10000, slideMax / 10000]}
-                  onChange={(e) => sliderHandler(e)}
-                >
-                  <RangeSliderTrack>
-                    <RangeSliderFilledTrack />
-                  </RangeSliderTrack>
-                  <RangeSliderThumb index={0} />
-                  <RangeSliderThumb index={1} />
-                </RangeSlider>
-              </Flex>
-            </Stack>
-            <Stack direction="column" spacing={3} mt={5}>
-              <Text fontSize="sm" fontWeight="semibold">
-                Awards Type
-              </Text>
-              <Checkbox colorScheme="blue" color="blue.500">
-                All Type
-              </Checkbox>
-              <Checkbox colorScheme="blue" color="blue.500">
-                Vouchers
-              </Checkbox>
-              <Checkbox colorScheme="blue" color="blue.500">
-                Products
-              </Checkbox>
-              <Checkbox colorScheme="blue" color="blue.500">
-                Others
-              </Checkbox>
-            </Stack>
-          </Box>
+              </Stack>
+              <Stack direction="column" spacing={3} mt={5}>
+                <Text fontSize="sm" fontWeight="semibold">
+                  Awards Type
+                </Text>
+                <Checkbox colorScheme="blue" color="blue.500">
+                  All Type
+                </Checkbox>
+                <Checkbox colorScheme="blue" color="blue.500">
+                  Vouchers
+                </Checkbox>
+                <Checkbox colorScheme="blue" color="blue.500">
+                  Products
+                </Checkbox>
+                <Checkbox colorScheme="blue" color="blue.500">
+                  Others
+                </Checkbox>
+              </Stack>
+            </Box>
+            <Button
+              width="100%"
+              bgColor="blue.600"
+              _hover={{ bg: 'blue.400' }}
+              color="white"
+            >
+              Filter
+            </Button>
+          </Flex>
         </DrawerBody>
-        <DrawerFooter>
-          <Button
-            width="100%"
-            bgColor="blue.600"
-            _hover={{ bg: 'blue.400' }}
-            color="white"
-          >
-            Filter
-          </Button>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
