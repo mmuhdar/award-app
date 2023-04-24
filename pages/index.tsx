@@ -3,6 +3,7 @@ import { Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { HiMenuAlt2 } from 'react-icons/hi';
 import { IoFilterSharp } from 'react-icons/io5';
 import Sidebar from '@/components/sidebar';
+import Card from '@/components/card';
 
 export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,6 +21,10 @@ export default function Home() {
           Awards
         </Text>
         <IoFilterSharp size="20px" />
+      </Flex>
+      <Flex flexDir="column" mt={5} gap={4}>
+        <Card />
+        <Card />
       </Flex>
       <Sidebar isOpen={isOpen} onClose={onClose} />
     </>
