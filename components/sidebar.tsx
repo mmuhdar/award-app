@@ -7,7 +7,6 @@ import {
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   Flex,
@@ -16,10 +15,15 @@ import {
   RangeSliderThumb,
   RangeSliderTrack,
   Stack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
+  TagRightIcon,
   Text,
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { IoClose } from 'react-icons/io5';
 
 interface ISidebar {
   isOpen: boolean;
@@ -30,8 +34,12 @@ interface ISidebar {
 export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
   const [slideMin, setSlideMin] = useState(0);
   const [slideMax, setSlideMax] = useState(0);
+  const [checkedType, setCheckedType] = useState([false, false, false]);
   const router = useRouter();
   const { pathname } = router;
+
+  const allChecked = checkedType.every(Boolean);
+  const isIndeterminate = checkedType.some(Boolean) && !allChecked;
 
   function sliderHandler(value: any[]): void {
     setSlideMin(value[0] * 10000);
@@ -102,7 +110,44 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
         <DrawerHeader>Filter</DrawerHeader>
         <DrawerBody>
           <Flex flexDir="column" justifyContent="space-between" h="85vh">
-            <Box>ini filter</Box>
+            <Flex flexDir="column" gap={2}>
+              <Box>
+                <Tag
+                  bg="inherit"
+                  color="blue.500"
+                  border="1px"
+                  borderColor="blue.500"
+                >
+                  <TagLabel>
+                    Poin: {slideMin} - {slideMax}
+                  </TagLabel>
+                  <TagCloseButton />
+                </Tag>
+              </Box>
+              <Box>
+                <Tag
+                  bg="inherit"
+                  color="blue.500"
+                  border="1px"
+                  borderColor="blue.500"
+                >
+                  <TagLabel>
+                    Type: {slideMin} - {slideMax}
+                  </TagLabel>
+                  <TagCloseButton />
+                </Tag>
+              </Box>
+              <Box>
+                <Tag
+                  bg="inherit"
+                  color="blue.500"
+                  border="1px"
+                  borderColor="blue.500"
+                >
+                  <TagLabel>Clear All Filter</TagLabel>
+                </Tag>
+              </Box>
+            </Flex>
             <Box>
               <Stack direction="column" spacing={3}>
                 <Text fontSize="sm" fontWeight="semibold">
@@ -133,17 +178,65 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                 <Text fontSize="sm" fontWeight="semibold">
                   Awards Type
                 </Text>
-                <Checkbox colorScheme="blue" color="blue.500">
+                <Checkbox
+                  colorScheme="blue"
+                  color="blue.500"
+                  isChecked={allChecked}
+                  isIndeterminate={isIndeterminate}
+                  onChange={(e) =>
+                    setCheckedType([
+                      e.target.checked,
+                      e.target.checked,
+                      e.target.checked,
+                    ])
+                  }
+                >
                   All Type
                 </Checkbox>
-                <Checkbox colorScheme="blue" color="blue.500">
+                <Checkbox
+                  onChange={(e) =>
+                    setCheckedType([
+                      e.target.checked,
+                      checkedType[1],
+                      checkedType[2],
+                    ])
+                  }
+                  value="VOUCHERS"
+                  colorScheme="blue"
+                  color="blue.500"
+                  isChecked={checkedType[0]}
+                >
                   Vouchers
                 </Checkbox>
-                <Checkbox colorScheme="blue" color="blue.500">
+                <Checkbox
+                  onChange={(e) =>
+                    setCheckedType([
+                      checkedType[0],
+                      e.target.checked,
+                      checkedType[2],
+                    ])
+                  }
+                  value="PRODUCTS"
+                  colorScheme="blue"
+                  color="blue.500"
+                  isChecked={checkedType[1]}
+                >
                   Products
                 </Checkbox>
-                <Checkbox colorScheme="blue" color="blue.500">
-                  Others
+                <Checkbox
+                  onChange={(e) =>
+                    setCheckedType([
+                      checkedType[0],
+                      checkedType[1],
+                      e.target.checked,
+                    ])
+                  }
+                  value="GIFTCARD"
+                  colorScheme="blue"
+                  color="blue.500"
+                  isChecked={checkedType[2]}
+                >
+                  Giftcard
                 </Checkbox>
               </Stack>
             </Box>
