@@ -1,10 +1,21 @@
 import React from 'react';
 import {
+  Box,
+  Button,
+  Checkbox,
   Drawer,
   DrawerBody,
+  DrawerCloseButton,
   DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
   DrawerOverlay,
   Flex,
+  RangeSlider,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+  RangeSliderTrack,
+  Stack,
   Text,
 } from '@chakra-ui/react';
 import Image from 'next/image';
@@ -13,12 +24,14 @@ import { useRouter } from 'next/router';
 interface ISidebar {
   isOpen: boolean;
   onClose: () => void;
+  statusButton: string;
 }
 
-export default function Sidebar({ isOpen, onClose }: ISidebar) {
+export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
   const router = useRouter();
   const { pathname } = router;
-  return (
+
+  return statusButton == 'menu' ? (
     <Drawer isOpen={isOpen} onClose={onClose} placement="left">
       <DrawerOverlay maxW="md" />
       <DrawerContent>
@@ -68,6 +81,58 @@ export default function Sidebar({ isOpen, onClose }: ISidebar) {
             </Flex>
           </Flex>
         </DrawerBody>
+      </DrawerContent>
+    </Drawer>
+  ) : (
+    <Drawer isOpen={isOpen} onClose={onClose} placement="right" size="full">
+      <DrawerOverlay maxW="md" />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>Filter</DrawerHeader>
+        <DrawerBody>
+          <Box>ini filter</Box>
+          <Box>
+            <Stack direction="column" spacing={3} width="md">
+              <Text fontSize="sm" fontWeight="semibold">
+                Poin Needed
+              </Text>
+              <RangeSlider aria-label={['min', 'max']} defaultValue={[1, 20]}>
+                <RangeSliderTrack>
+                  <RangeSliderFilledTrack />
+                </RangeSliderTrack>
+                <RangeSliderThumb index={0} />
+                <RangeSliderThumb index={1} />
+              </RangeSlider>
+            </Stack>
+            <Stack direction="column" spacing={3} mt={5}>
+              <Text fontSize="sm" fontWeight="semibold">
+                Awards Type
+              </Text>
+              <Checkbox colorScheme="blue" color="blue.500">
+                All Type
+              </Checkbox>
+              <Checkbox colorScheme="blue" color="blue.500">
+                Vouchers
+              </Checkbox>
+              <Checkbox colorScheme="blue" color="blue.500">
+                Products
+              </Checkbox>
+              <Checkbox colorScheme="blue" color="blue.500">
+                Others
+              </Checkbox>
+            </Stack>
+          </Box>
+        </DrawerBody>
+        <DrawerFooter>
+          <Button
+            width="100%"
+            bgColor="blue.600"
+            _hover={{ bg: 'blue.400' }}
+            color="white"
+          >
+            Filter
+          </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

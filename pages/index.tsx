@@ -4,9 +4,16 @@ import { HiMenuAlt2 } from 'react-icons/hi';
 import { IoFilterSharp } from 'react-icons/io5';
 import Sidebar from '@/components/sidebar';
 import Card from '@/components/card';
+import { useState } from 'react';
 
 export default function Home() {
+  const [statusButton, setStatusButton] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  async function sidebarHandler(status: string): Promise<void> {
+    await setStatusButton(status);
+    onOpen();
+  }
   return (
     <>
       <Head>
@@ -16,17 +23,21 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Flex justifyContent="space-between" alignItems="center" p={5}>
-        <HiMenuAlt2 size="20px" onClick={onOpen} cursor="pointer" />
+        <HiMenuAlt2
+          size="20px"
+          onClick={() => sidebarHandler('menu')}
+          cursor="pointer"
+        />
         <Text fontSize="lg" fontWeight="bold">
           Awards
         </Text>
-        <IoFilterSharp size="20px" />
+        <IoFilterSharp size="20px" onClick={() => sidebarHandler('filter')} />
       </Flex>
       <Flex flexDir="column" mt={5} gap={4}>
         <Card />
         <Card />
       </Flex>
-      <Sidebar isOpen={isOpen} onClose={onClose} />
+      <Sidebar isOpen={isOpen} onClose={onClose} statusButton={statusButton} />
     </>
   );
 }
