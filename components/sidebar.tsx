@@ -101,7 +101,7 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
         <DrawerCloseButton />
         <DrawerHeader>Filter</DrawerHeader>
         <DrawerBody>
-          <Flex flexDir="column" justifyContent="space-between">
+          <Flex flexDir="column" justifyContent="space-between" h="85vh">
             <Box>ini filter</Box>
             <Box>
               <Stack direction="column" spacing={3}>
