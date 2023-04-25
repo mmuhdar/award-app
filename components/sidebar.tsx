@@ -18,12 +18,11 @@ import {
   Tag,
   TagCloseButton,
   TagLabel,
-  TagRightIcon,
   Text,
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { IoClose } from 'react-icons/io5';
+import { useLogout } from '@/hooks';
 
 interface ISidebar {
   isOpen: boolean;
@@ -35,8 +34,10 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
   const [slideMin, setSlideMin] = useState(0);
   const [slideMax, setSlideMax] = useState(0);
   const [checkedType, setCheckedType] = useState([false, false, false]);
+
   const router = useRouter();
   const { pathname } = router;
+  const { logout } = useLogout();
 
   const allChecked = checkedType.every(Boolean);
   const isIndeterminate = checkedType.some(Boolean) && !allChecked;
@@ -48,6 +49,35 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
 
   function convertNumber(value: number) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function stringType(value: boolean[]): string[] {
+    const [voucher, product, giftcard] = value;
+    const temp = ['', '', ''];
+    if (voucher) {
+      temp[0] = 'VOUCHERS';
+    } else {
+      temp[0] = '';
+    }
+
+    if (product) {
+      temp[1] = 'PRODUCTS';
+    } else {
+      temp[1] = '';
+    }
+
+    if (giftcard) {
+      temp[2] = 'GIFTCARD';
+    } else {
+      temp[2] = '';
+    }
+
+    return temp;
+  }
+  function resetFilter(): void {
+    setSlideMin(0);
+    setSlideMax(0);
+    setCheckedType([false, false, false]);
   }
 
   return statusButton == 'menu' ? (
@@ -94,6 +124,10 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                 fontWeight="semibold"
                 fontSize="sm"
                 color="gray.400"
+                onClick={() => {
+                  logout();
+                  router.push('/login');
+                }}
               >
                 Logout
               </Text>
@@ -121,7 +155,12 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                   <TagLabel>
                     Poin: {slideMin} - {slideMax}
                   </TagLabel>
-                  <TagCloseButton />
+                  <TagCloseButton
+                    onClick={() => {
+                      setSlideMax(0);
+                      setSlideMin(0);
+                    }}
+                  />
                 </Tag>
               </Box>
               <Box>
@@ -132,9 +171,11 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                   borderColor="blue.500"
                 >
                   <TagLabel>
-                    Type: {slideMin} - {slideMax}
+                    Type: {stringType(checkedType).toString()}
                   </TagLabel>
-                  <TagCloseButton />
+                  <TagCloseButton
+                    onClick={() => setCheckedType([false, false, false])}
+                  />
                 </Tag>
               </Box>
               <Box>
@@ -143,6 +184,8 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                   color="blue.500"
                   border="1px"
                   borderColor="blue.500"
+                  cursor="pointer"
+                  onClick={() => resetFilter()}
                 >
                   <TagLabel>Clear All Filter</TagLabel>
                 </Tag>
@@ -183,25 +226,24 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                   color="blue.500"
                   isChecked={allChecked}
                   isIndeterminate={isIndeterminate}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setCheckedType([
                       e.target.checked,
                       e.target.checked,
                       e.target.checked,
-                    ])
-                  }
+                    ]);
+                  }}
                 >
                   All Type
                 </Checkbox>
                 <Checkbox
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setCheckedType([
                       e.target.checked,
                       checkedType[1],
                       checkedType[2],
-                    ])
-                  }
-                  value="VOUCHERS"
+                    ]);
+                  }}
                   colorScheme="blue"
                   color="blue.500"
                   isChecked={checkedType[0]}
@@ -209,14 +251,13 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                   Vouchers
                 </Checkbox>
                 <Checkbox
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setCheckedType([
                       checkedType[0],
                       e.target.checked,
                       checkedType[2],
-                    ])
-                  }
-                  value="PRODUCTS"
+                    ]);
+                  }}
                   colorScheme="blue"
                   color="blue.500"
                   isChecked={checkedType[1]}
@@ -224,14 +265,13 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
                   Products
                 </Checkbox>
                 <Checkbox
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setCheckedType([
                       checkedType[0],
                       checkedType[1],
                       e.target.checked,
-                    ])
-                  }
-                  value="GIFTCARD"
+                    ]);
+                  }}
                   colorScheme="blue"
                   color="blue.500"
                   isChecked={checkedType[2]}
