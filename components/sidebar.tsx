@@ -22,20 +22,30 @@ import {
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useLogout } from '@/hooks';
+import { useCurrentUser, useLogout } from '@/hooks';
+import { convertNumber } from '@/utils/convertNumber';
+import axios from 'axios';
+import { localUrl } from '@/pages';
 
 interface ISidebar {
   isOpen: boolean;
   onClose: () => void;
   statusButton: string;
+  setAwardData: React.Dispatch<React.SetStateAction<never[]>>;
 }
 
-export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
+export default function Sidebar({
+  isOpen,
+  onClose,
+  statusButton,
+  setAwardData,
+}: ISidebar) {
   const [slideMin, setSlideMin] = useState(0);
   const [slideMax, setSlideMax] = useState(0);
   const [checkedType, setCheckedType] = useState([false, false, false]);
 
   const router = useRouter();
+  const user = useCurrentUser();
   const { pathname } = router;
   const { logout } = useLogout();
 
@@ -45,10 +55,6 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
   function sliderHandler(value: any[]): void {
     setSlideMin(value[0] * 10000);
     setSlideMax(value[1] * 10000);
-  }
-
-  function convertNumber(value: number) {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
   function stringType(value: boolean[]): string[] {
@@ -74,10 +80,43 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
 
     return temp;
   }
-  function resetFilter(): void {
-    setSlideMin(0);
-    setSlideMax(0);
-    setCheckedType([false, false, false]);
+  async function resetFilter(): Promise<void> {
+    try {
+      setSlideMin(0);
+      setSlideMax(0);
+      setCheckedType([false, false, false]);
+
+      const token = user?.accessToken;
+      const { data } = await axios.get(localUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAwardData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function filterHandler(): Promise<void> {
+    if (user?.accessToken) {
+      const token = user.accessToken;
+      const stringifyType = JSON.stringify(stringType(checkedType));
+      const stringifyPoin = JSON.stringify([slideMin, slideMax]);
+      try {
+        const { data } = await axios.get(
+          `${localUrl}?type=${stringifyType}&poin=${stringifyPoin}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAwardData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   return statusButton == 'menu' ? (
@@ -285,6 +324,7 @@ export default function Sidebar({ isOpen, onClose, statusButton }: ISidebar) {
               bgColor="blue.600"
               _hover={{ bg: 'blue.400' }}
               color="white"
+              onClick={() => filterHandler()}
             >
               Filter
             </Button>

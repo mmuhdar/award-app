@@ -4,11 +4,56 @@ import { HiMenuAlt2 } from 'react-icons/hi';
 import { IoFilterSharp } from 'react-icons/io5';
 import Sidebar from '@/components/sidebar';
 import Card from '@/components/card';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import useSWR from 'swr';
+import { useCurrentUser } from '@/hooks';
+import axios from 'axios';
+import AddButton from '@/components/addButton';
+
+export const localUrl = 'http://localhost:3000/award';
+
+const fetcher = (url: string, token: any) =>
+  axios.get(url, {
+    headers: {
+      Authorization: `bearer ${token}`,
+    },
+  });
 
 export default function Home() {
   const [statusButton, setStatusButton] = useState('');
+  const [awardData, setAwardData] = useState([]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const user = useCurrentUser();
+
+  const fetchData = async (token: string) => {
+    try {
+      const { data } = await axios.get(localUrl, {
+        data: {
+          name: 'amana',
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (user?.accessToken) {
+      fetchData(user?.accessToken)
+        .then((res) => setAwardData(res))
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
+
+  // console.log(awardData);
+
+  // const { data, error } = useSWR(localUrl, (url) =>
+  //   fetcher(url, user?.accessToken)
+  // );
 
   async function sidebarHandler(status: string): Promise<void> {
     await setStatusButton(status);
@@ -33,11 +78,26 @@ export default function Home() {
         </Text>
         <IoFilterSharp size="20px" onClick={() => sidebarHandler('filter')} />
       </Flex>
-      <Flex flexDir="column" mt={5} gap={4}>
-        <Card />
-        <Card />
+      {awardData?.length == 0 ? (
+        <Flex justifyContent="center" alignItems="center">
+          <Text>Opps, No Data Dound!</Text>
+        </Flex>
+      ) : (
+        <Flex flexDir="column" mt={5} gap={4}>
+          {awardData?.map((el: any) => {
+            return <Card key={el.id} data={el} />;
+          })}
+        </Flex>
+      )}
+      <Sidebar
+        isOpen={isOpen}
+        onClose={onClose}
+        statusButton={statusButton}
+        setAwardData={setAwardData}
+      />
+      <Flex justifyContent="flex-end" m={5}>
+        <AddButton />
       </Flex>
-      <Sidebar isOpen={isOpen} onClose={onClose} statusButton={statusButton} />
     </>
   );
 }
